@@ -48,5 +48,5 @@ It is a library that provides different types of charts to plot data points. Cur
 
 ### Screenshot
 
-![Radar Chart](screenshots\radar_chart.gif)
+![Radar Chart](screenshots/radar_chart.gif)
 
