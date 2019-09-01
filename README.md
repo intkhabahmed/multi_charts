@@ -48,5 +48,6 @@ It is a library that provides different types of charts to plot data points. Cur
 
 ### Screenshot
 
-![Radar Chart](screenshots/radar_chart.gif)
+![Radar Chart Blue](screenshots/radar_chart.gif){:height="400px" width="200px"}
+![Radar Chart Red](screenshots/radar_chart_red.gif){:height="400px" width="200px"}
 
