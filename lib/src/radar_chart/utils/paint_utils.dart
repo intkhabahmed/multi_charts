@@ -1,0 +1,171 @@
+import 'dart:math' show cos, pi, sin;
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
+/// Helper class to draw the different chart elements.
+class PaintUtils {
+  static const double LABEL_X_PADDING = 7.0;
+  static const double LABEL_Y_PADDING = 7.0;
+
+  /// Draws the labels at the given offset positions at the outside of the graph.
+  static void drawLabels(
+      Canvas canvas,
+      Offset center,
+      List<String> labels,
+      List<Offset> labelPoints,
+      double textSize,
+      double labelWidth,
+      int maxLinesForLabels) {
+    var textPainter = TextPainter(textDirection: TextDirection.ltr);
+    for (var i = 0; i < labelPoints.length; i++) {
+      textPainter.text = TextSpan(
+          text: labels[i],
+          style: TextStyle(color: Colors.black, fontSize: textSize));
+      textPainter.maxLines = maxLinesForLabels;
+      textPainter.textAlign = TextAlign.center;
+
+      textPainter.layout(maxWidth: labelWidth);
+      //top-left
+      if (labelPoints[i].dx < center.dx && labelPoints[i].dy < center.dy) {
+        textPainter.paint(
+            canvas,
+            labelPoints[i].translate(
+                -(textPainter.size.width + LABEL_X_PADDING), -LABEL_Y_PADDING));
+      }
+      //bottom-right
+      else if (labelPoints[i].dx > center.dx && labelPoints[i].dy > center.dy) {
+        textPainter.paint(canvas,
+            labelPoints[i].translate(LABEL_X_PADDING, -LABEL_Y_PADDING / 2));
+      }
+      //top-right
+      else if (labelPoints[i].dx > center.dx && labelPoints[i].dy < center.dy) {
+        textPainter.paint(
+            canvas,
+            labelPoints[i]
+                .translate(LABEL_X_PADDING, -textPainter.size.height / 2));
+      }
+      //bottom-left
+      else if (labelPoints[i].dx < center.dx && labelPoints[i].dy > center.dy) {
+        textPainter.paint(
+            canvas,
+            labelPoints[i].translate(
+                -(textPainter.size.width + LABEL_X_PADDING / 2),
+                -LABEL_Y_PADDING / 2));
+      }
+      //top-center
+      else if (labelPoints[i].dx == center.dx &&
+          labelPoints[i].dy < center.dy) {
+        textPainter.paint(
+            canvas,
+            labelPoints[i].translate(-(textPainter.size.width / 2),
+                -(textPainter.size.height + LABEL_Y_PADDING / 2)));
+      }
+      //bottom-center
+      else if (labelPoints[i].dx == center.dx &&
+          labelPoints[i].dy > center.dy) {
+        textPainter.paint(
+            canvas,
+            labelPoints[i]
+                .translate(-(textPainter.size.width / 2), LABEL_Y_PADDING));
+      }
+      //right-center
+      else if (labelPoints[i].dx > center.dx &&
+          labelPoints[i].dy == center.dy) {
+        textPainter.paint(
+            canvas,
+            labelPoints[i]
+                .translate(LABEL_X_PADDING, -(textPainter.size.height / 2)));
+      }
+      //left-center
+      else if (labelPoints[i].dx < center.dx &&
+          labelPoints[i].dy == center.dy) {
+        textPainter.paint(
+            canvas,
+            labelPoints[i].translate(
+                -(textPainter.size.width + LABEL_X_PADDING),
+                -(textPainter.size.height / 2)));
+      }
+    }
+  }
+
+  /// Draws the outlines of the chart based on the [RadarChart.maxValue].
+  static List<Offset> drawChartOutline(
+      Canvas canvas,
+      Offset center,
+      double angle,
+      Color strokeColor,
+      double maxValue,
+      int noOfPoints,
+      double animationPercent) {
+    var boundaryPoints = List<Offset>();
+    var outerPoints = List<Offset>();
+    for (var i = 0; i < maxValue; i += maxValue ~/ 5) {
+      boundaryPoints.clear();
+      for (var j = 0; j < noOfPoints; j++) {
+        var x = animationPercent * center.dy / 2 * cos(angle * j - pi / 2);
+        var y = animationPercent * center.dy / 2 * sin(angle * j - pi / 2);
+        x -= x * i / maxValue;
+        y -= y * i / maxValue;
+        boundaryPoints.add(Offset(x, y) + center);
+        if (i == 0) {
+          outerPoints.add(boundaryPoints[j]);
+        }
+        canvas.drawLine(
+            center, boundaryPoints[j], getStrokePaint(strokeColor, 150, 0.3));
+      }
+      boundaryPoints.add(boundaryPoints[0]);
+      canvas.drawPoints(PointMode.polygon, boundaryPoints,
+          getStrokePaint(strokeColor, 150, 0.8));
+    }
+    canvas.drawCircle(center, 2.0, getFillPaint(strokeColor));
+    return outerPoints;
+  }
+
+  /// Draws the graph data for all the value points with the background color defined by
+  /// [RadarChart.fillColor].
+  static void drawGraphData(Canvas canvas, List<Offset> valuePoints,
+      Color fillColor, Color strokeColor) {
+    Path valuePath = Path()..addPolygon(valuePoints, true);
+    canvas.drawPath(valuePath, getFillPaint(fillColor));
+    canvas.drawPath(valuePath, getStrokePaint(fillColor, 200, 1.5));
+  }
+
+  /// Returns the Fill Paint object for the graph.
+  static Paint getFillPaint(Color fillColor) {
+    return Paint()
+      ..color =
+          Color.fromARGB(50, fillColor.red, fillColor.green, fillColor.blue)
+      ..style = PaintingStyle.fill;
+  }
+
+  ///Returns the Stroke Paint object for the graph.
+  static Paint getStrokePaint(
+      Color strokeColor, int alpha, double strokeWidth) {
+    return Paint()
+      ..color = Color.fromARGB(
+          alpha, strokeColor.red, strokeColor.green, strokeColor.blue)
+      ..isAntiAlias = true
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+  }
+
+  /// CAlculates the text size for the labels based on canvas size and [RadarChart.textScaleFactor]
+  static double getTextSize(Size size, double textScaleFactor) {
+    return (size.height + size.width) / 2 * textScaleFactor;
+  }
+
+  /// Calculates the default width of the label's text, if [labelWidth] is null.
+  static double getDefaultLabelWidth(Size size, Offset center, double angle) {
+    return (size.width -
+            (center.dy / 2) * cos(angle - pi / 2) -
+            PaintUtils.LABEL_X_PADDING) /
+        2.85;
+  }
+
+  /// Calculates the default maximum number of lines for label's text,
+  /// if [maxLinesForLabels] is null.
+  static int getDefaultMaxLinesForLabels(Size size) {
+    return (size.height / 100).ceil();
+  }
+}
