@@ -48,6 +48,6 @@ It is a library that provides different types of charts to plot data points. Cur
 
 ### Screenshot
 
-<img src="https://drive.google.com/file/d/1aCshjCJjL5fjR-qxQI-yLFuNEHuxi5bG/view?usp=sharing" alt="Radar Chart Blue" width="200" height="400"/>
-<img src="https://drive.google.com/file/d/1aCshjCJjL5fjR-qxQI-yLFuNEHuxi5bG/view?usp=sharing" alt="Radar Chart Red" width="200" height="400"/>
+<img src="https://drive.google.com/uc?export=view&id=1xBM5mTMdU9d49Qo2vrxsq4UmBk2cEaps" alt="Radar Chart Red" width="200" height="400"/>
+<img src="https://drive.google.com/uc?export=view&id=1aCshjCJjL5fjR-qxQI-yLFuNEHuxi5bG" alt="Radar Chart Blue" width="200" height="400"/>
 
