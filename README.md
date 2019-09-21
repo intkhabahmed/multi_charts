@@ -27,7 +27,7 @@ It is a library that provides different types of charts to plot data points. Cur
  * **labelColor** - defines the color of the chart labels, defaults to **Colors.white**.
 
  * **maxHeight** and **maxWidth** - defines the maximum width and height of the chart when
- no parent contraints are applied, otherwise ignored.
+ no parent constraints are applied, otherwise ignored.
 
  * **textScaleFactor** - defines the factor by which the label's textSize should increase, 
  if not provided defaults to 0.04
