@@ -3,7 +3,7 @@ import 'package:multi_charts/src/radar_chart/utils/painters/radar_chart_painter.
 
 /// A chart which plots the values in the form of a spider web or radar. It takes the
 /// @required[values] parameter which provides the data points and @required[maxValue]
-/// which defines the scale of the graph. E.g. The chart contains five levels, if
+/// which defines the scale of the graph. Minimum 3 values are required. E.g. The chart contains five levels, if
 /// [maxValue]=10, then each level will have the value '2'.
 ///
 /// The other parameters are optional which define different behaviours for the chart like:
@@ -17,6 +17,8 @@ import 'package:multi_charts/src/radar_chart/utils/painters/radar_chart_painter.
 /// defaults to [Colors.black26].
 ///
 /// [strokeColor] defines the color of the chart outlines, defaults to [Colors.black87].
+///
+/// [labelColor] defines the color of the chart labels, defaults to [Colors.white].
 ///
 /// [maxHeight] and [maxWidth] defines the maximum width and height of the chart when
 /// no parent contraints are applied, otherwise ignored.
@@ -45,6 +47,7 @@ class RadarChart extends StatefulWidget {
   final Size size;
   final Color fillColor;
   final Color strokeColor;
+  final Color labelColor;
   final double maxWidth;
   final double maxHeight;
   final double textScaleFactor;
@@ -62,6 +65,7 @@ class RadarChart extends StatefulWidget {
       this.size = Size.infinite,
       this.fillColor = Colors.black26,
       this.strokeColor = Colors.black87,
+      this.labelColor = Colors.black,
       this.maxWidth = 200,
       this.maxHeight = 200,
       this.textScaleFactor = 0.04,
@@ -90,6 +94,9 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
     if (widget.values.any((value) => value > widget.maxValue)) {
       throw ArgumentError("All values of graph should be less than maxValue");
     }
+    if (widget.values.length < 3) {
+      throw ArgumentError("Minimum 3 values are required for Radar chart");
+    }
     _dataAnimationController = AnimationController(
         vsync: this,
         duration: widget.animate
@@ -114,9 +121,11 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
   void didUpdateWidget(RadarChart oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.values.any((value) => value > widget.maxValue)) {
-      _dataAnimationController..reset();
-      _outlineAnimationController..reset();
+      _dataAnimationController.reset();
+      _outlineAnimationController.reset();
       throw ArgumentError("All values of graph should be less than maxValue");
+    } else if (widget.values.length < 3) {
+      throw ArgumentError("Minimum 3 values are required for Radar chart");
     } else if (widget.animate) {
       if (oldWidget.animationDuration != widget.animationDuration) {
         _dataAnimationController.duration = widget.animationDuration;
@@ -164,6 +173,7 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
               widget.maxValue,
               widget.fillColor,
               widget.strokeColor,
+              widget.labelColor,
               widget.textScaleFactor,
               widget.labelWidth,
               widget.maxLinesForLabels,

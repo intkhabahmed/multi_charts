@@ -5,7 +5,7 @@ import 'package:multi_charts/src/radar_chart/utils/paint_utils.dart';
 
 /// Custom Painter class for drawing the chart. Depends on various parameters like
 /// [RadarChart.values], [RadarChart.labels], [RadarChart.maxValue], [RadarChart.fillColor],
-/// [RadarChart.strokeColor], [RadarChart.textScaleFactor], [RadarChart.labelWidth],
+/// [RadarChart.strokeColor], [RadarChart.labelColor], [RadarChart.textScaleFactor], [RadarChart.labelWidth],
 /// [RadarChart.maxLinesForLabels].
 ///
 /// It also has [dataAnimationPercent] and [outlineAnimationPercent] which defines the
@@ -16,6 +16,7 @@ class RadarChartPainter extends CustomPainter {
   final double maxValue;
   final Color fillColor;
   final Color strokeColor;
+  final Color labelColor;
   final double textScaleFactor;
   final double labelWidth;
   final int maxLinesForLabels;
@@ -28,6 +29,7 @@ class RadarChartPainter extends CustomPainter {
       this.maxValue,
       this.fillColor,
       this.strokeColor,
+      this.labelColor,
       this.textScaleFactor,
       this.labelWidth,
       this.maxLinesForLabels,
@@ -57,7 +59,8 @@ class RadarChartPainter extends CustomPainter {
         outerPoints,
         PaintUtils.getTextSize(size, textScaleFactor),
         labelWidth ?? PaintUtils.getDefaultLabelWidth(size, center, angle),
-        maxLinesForLabels ?? PaintUtils.getDefaultMaxLinesForLabels(size));
+        maxLinesForLabels ?? PaintUtils.getDefaultMaxLinesForLabels(size),
+        labelColor);
   }
 
   @override

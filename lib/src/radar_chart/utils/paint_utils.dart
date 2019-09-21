@@ -16,12 +16,13 @@ class PaintUtils {
       List<Offset> labelPoints,
       double textSize,
       double labelWidth,
-      int maxLinesForLabels) {
+      int maxLinesForLabels,
+      Color labelColor) {
     var textPainter = TextPainter(textDirection: TextDirection.ltr);
     for (var i = 0; i < labelPoints.length; i++) {
       textPainter.text = TextSpan(
           text: labels[i],
-          style: TextStyle(color: Colors.black, fontSize: textSize));
+          style: TextStyle(color: labelColor, fontSize: textSize));
       textPainter.maxLines = maxLinesForLabels;
       textPainter.textAlign = TextAlign.center;
 

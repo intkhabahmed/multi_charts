@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.com/intkhabahmed/multi_charts.svg?branch=master)](https://travis-ci.com/intkhabahmed/multi_charts)
 [![pub package](https://img.shields.io/pub/v/multi_charts.svg)](https://pub.dartlang.org/packages/multi_charts)
-
 # multi_charts
 
 It is a library that provides different types of charts to plot data points. Currently it supports only Radar Chart, but will support more types in the coming future.
@@ -24,6 +23,8 @@ It is a library that provides different types of charts to plot data points. Cur
  defaults to **Colors.black26**.
 
  * **strokeColor** - defines the color of the chart outlines, defaults to **Colors.black87**.
+
+ * **labelColor** - defines the color of the chart labels, defaults to **Colors.white**.
 
  * **maxHeight** and **maxWidth** - defines the maximum width and height of the chart when
  no parent contraints are applied, otherwise ignored.
