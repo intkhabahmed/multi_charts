@@ -8,7 +8,7 @@ import 'package:multi_charts/src/radar_chart/utils/painters/radar_chart_painter.
 ///
 /// The other parameters are optional which define different behaviours for the chart like:
 /// [labels] which will be shown in the graph, if not provided, will default to the value
-/// of data points.
+/// of data points. If provided, it's length should be same as that of values
 ///
 /// [size] which defines the canvas area defaults to Size.infinite and is constrained by
 /// the parent widget.
@@ -97,6 +97,9 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
     if (widget.values.length < 3) {
       throw ArgumentError("Minimum 3 values are required for Radar chart");
     }
+    if (widget.values.length != widget.labels.length) {
+      throw ArgumentError("values and labels should have same size");
+    }
     _dataAnimationController = AnimationController(
         vsync: this,
         duration: widget.animate
@@ -126,6 +129,8 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
       throw ArgumentError("All values of graph should be less than maxValue");
     } else if (widget.values.length < 3) {
       throw ArgumentError("Minimum 3 values are required for Radar chart");
+    } else if (widget.values.length != widget.labels.length) {
+      throw ArgumentError("values and labels should have same size");
     } else if (widget.animate) {
       if (oldWidget.animationDuration != widget.animationDuration) {
         _dataAnimationController.duration = widget.animationDuration;

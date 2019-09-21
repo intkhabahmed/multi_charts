@@ -14,7 +14,7 @@ It is a library that provides different types of charts to plot data points. Cur
  The other parameters are optional which define different behaviours for the chart like:
  
  * **labels** - which will be shown in the graph, if not provided, will default to the value
- of data points.
+ of data points. If provided, it's length should be same as that of values
 
  * **size** - which defines the canvas area defaults to Size.infinite and is constrained by
  the parent widget.
