@@ -151,7 +151,7 @@ class PaintUtils {
       ..strokeWidth = strokeWidth;
   }
 
-  /// CAlculates the text size for the labels based on canvas size and [RadarChart.textScaleFactor]
+  /// Calculates the text size for the labels based on canvas size and [RadarChart.textScaleFactor]
   static double getTextSize(Size size, double textScaleFactor) {
     return (size.height + size.width) / 2 * textScaleFactor;
   }
