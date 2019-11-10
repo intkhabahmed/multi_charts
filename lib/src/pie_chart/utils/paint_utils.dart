@@ -8,20 +8,16 @@ class PaintUtils {
     return (2 * pi / 100.0) * value;
   }
 
-  static List<Color> drawPieChart(
+  static void drawPieChart(
       Canvas canvas,
       Offset center,
       List<double> values,
       List<Color> sliceFillColors,
-      double textScaleFactor,
+      double textSize,
       bool separateFocusedValue,
       SeparatedValue separatedValueType,
       double startAngle,
       bool randomStartAngle) {
-    if (sliceFillColors == null ||
-        (sliceFillColors != null && sliceFillColors.isEmpty)) {
-      sliceFillColors = getRandomColors(values.length);
-    }
     double calculatedStartAngle =
         (randomStartAngle ? Random().nextDouble() : 1) *
             (startAngle * (pi / 180));
@@ -55,19 +51,28 @@ class PaintUtils {
           calculatedStartAngle + calculateArcLength(chartValue);
     });
     canvas.drawCircle(center, 2.0, getFillPaint(Colors.black));
-    return sliceFillColors;
   }
 
   static void drawLegend(
     Canvas canvas,
-    List<String> labels,
-    Color labelColor,
-    Offset labelRegion,
-    List<Color> sliceFillColors,
-    double textSize,
-    LabelIconShape iconShape,
+    Offset center,
+    double legendIconSize,
+    LegendIconShape legendIconShape,
+    Color legendIconFillColor,
   ) {
-    
+    legendIconShape == LegendIconShape.Circle
+        ? canvas.drawCircle(
+            center,
+            legendIconSize,
+            getFillPaint(legendIconFillColor),
+          )
+        : canvas.drawRect(
+            Rect.fromCenter(
+              center: center,
+              width: legendIconSize,
+              height: legendIconSize,
+            ),
+            getFillPaint(legendIconFillColor));
   }
 
   static void drawArc(
