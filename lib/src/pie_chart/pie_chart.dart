@@ -13,6 +13,7 @@ class PieChart extends StatefulWidget {
   final double maxWidth;
   final double maxHeight;
   final Color labelColor;
+  final LegendPosition legendPosition;
   final double legendIconSize;
   final double legendTextSize;
   final EdgeInsetsGeometry legendItemPadding;
@@ -35,9 +36,11 @@ class PieChart extends StatefulWidget {
       this.maxWidth = 200,
       this.maxHeight = 200,
       this.labelColor = Colors.black,
+      this.legendPosition = LegendPosition.Right,
       this.legendIconSize = 10,
       this.legendTextSize = 16.0,
-      this.legendItemPadding = const EdgeInsets.symmetric(vertical: 8.0),
+      this.legendItemPadding =
+          const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       this.legendIconShape = LegendIconShape.Square,
       this.textScaleFactor = 0.04,
       this.animate = true,
@@ -91,56 +94,124 @@ class _PieChartState extends State<PieChart> {
     return LimitedBox(
       maxWidth: widget.maxWidth,
       maxHeight: widget.maxHeight,
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            flex: 2,
-            child: CustomPaint(
-              painter: PieChartPainter(
-                  widget.values,
-                  widget.labelColor,
-                  _sliceFillColors,
-                  widget.textScaleFactor,
-                  widget.separateFocusedValue,
-                  widget.separatedValueType,
-                  widget.startAngle,
-                  widget.randomStartAngle),
-              size: widget.size,
+      child: _getLayoutAsPerLegendPosition(widget.legendPosition),
+    );
+  }
+
+  Widget _getLayoutAsPerLegendPosition(LegendPosition position) {
+    switch (position) {
+      case LegendPosition.Right:
+        return Row(
+          children: <Widget>[
+            Flexible(
+              flex: 3,
+              child: _chartLayout(),
             ),
-          ),
-          Flexible(
-            flex: 1,
-            child: ListView.builder(
-              itemCount: _labels.length,
-              itemBuilder: (context, index) => Padding(
-                padding: widget.legendItemPadding,
-                child: Row(
-                  children: <Widget>[
-                    CustomPaint(
-                      painter: PieChartLegendIconPainter(
-                        _sliceFillColors[index],
-                        widget.legendIconSize,
-                        widget.legendIconShape,
-                      ),
-                      size: Size(widget.legendIconSize, widget.legendIconSize),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          _labels[index],
-                          style: TextStyle(
-                              color: widget.labelColor,
-                              fontSize: widget.legendTextSize),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+            Flexible(
+              flex: 1,
+              child: _legendLayout(Axis.vertical),
+            ),
+          ],
+        );
+      case LegendPosition.Left:
+        return Row(
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              child: _legendLayout(Axis.vertical),
+            ),
+            Flexible(
+              flex: 3,
+              child: _chartLayout(),
+            ),
+          ],
+        );
+      case LegendPosition.Top:
+        return Column(
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              child: _legendLayout(Axis.horizontal),
+            ),
+            Flexible(
+              flex: 3,
+              child: _chartLayout(),
+            ),
+          ],
+        );
+      case LegendPosition.Bottom:
+        return Column(
+          children: <Widget>[
+            Flexible(
+              flex: 3,
+              child: _chartLayout(),
+            ),
+            Flexible(
+              flex: 1,
+              child: _legendLayout(Axis.horizontal),
+            ),
+          ],
+        );
+      default:
+        return null;
+    }
+  }
+
+  Widget _chartLayout() {
+    return CustomPaint(
+      painter: PieChartPainter(
+          widget.values,
+          widget.labelColor,
+          _sliceFillColors,
+          widget.textScaleFactor,
+          widget.separateFocusedValue,
+          widget.separatedValueType,
+          widget.startAngle,
+          widget.randomStartAngle,
+          widget.legendPosition),
+      size: widget.size,
+    );
+  }
+
+  Widget _legendLayout(Axis direction) {
+    return ListView.builder(
+      scrollDirection: direction,
+      itemCount: _labels.length,
+      itemBuilder: (context, index) => Padding(
+        padding: widget.legendItemPadding,
+        child: Row(
+          children: <Widget>[
+            CustomPaint(
+              painter: PieChartLegendIconPainter(
+                _sliceFillColors[index],
+                widget.legendIconSize,
+                widget.legendIconShape,
               ),
+              size: Size(widget.legendIconSize, widget.legendIconSize),
             ),
-          )
-        ],
+            direction == Axis.vertical
+                ? Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        _labels[index],
+                        style: TextStyle(
+                            color: widget.labelColor,
+                            fontSize: widget.legendTextSize),
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      _labels[index],
+                      style: TextStyle(
+                          color: widget.labelColor,
+                          fontSize: widget.legendTextSize),
+                    ),
+                  )
+          ],
+        ),
       ),
     );
   }

@@ -12,6 +12,7 @@ class PieChartPainter extends CustomPainter {
   final SeparatedValue separatedValueType;
   final double startAngle;
   final bool randomStartAngle;
+  final LegendPosition legendPosition;
 
   PieChartPainter(
       this.values,
@@ -21,7 +22,8 @@ class PieChartPainter extends CustomPainter {
       this.separateFocusedValue,
       this.separatedValueType,
       this.startAngle,
-      this.randomStartAngle);
+      this.randomStartAngle,
+      this.legendPosition);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -35,7 +37,8 @@ class PieChartPainter extends CustomPainter {
         separateFocusedValue,
         separatedValueType,
         startAngle,
-        randomStartAngle);
+        randomStartAngle,
+        legendPosition);
   }
 
   @override

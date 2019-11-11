@@ -1,4 +1,4 @@
-import 'dart:math' show pi, Random, max, min;
+import 'dart:math' show Random, cos, max, min, pi, sin;
 
 import 'package:flutter/material.dart';
 import './enums.dart';
@@ -17,31 +17,43 @@ class PaintUtils {
       bool separateFocusedValue,
       SeparatedValue separatedValueType,
       double startAngle,
-      bool randomStartAngle) {
+      bool randomStartAngle,
+      LegendPosition legendPosition) {
     double calculatedStartAngle =
         (randomStartAngle ? Random().nextDouble() : 1) *
             (startAngle * (pi / 180));
     values.asMap().forEach((index, chartValue) {
+      var length = legendPosition == LegendPosition.Bottom ||
+              legendPosition == LegendPosition.Top
+          ? center.dy
+          : center.dx;
       if (separateFocusedValue &&
           values.reduce(separatedValueType == SeparatedValue.Max ? max : min) ==
               chartValue) {
+        double cStartAngle = calculatedStartAngle + (pi * 0.01);
+        double cSliceAngle = calculateArcLength(chartValue) - (pi * 0.01) * 2;
+        canvas.save();
+        var posX = 4 * cos(cStartAngle + cSliceAngle / 2);
+        var posY = 4 * sin(cStartAngle + cSliceAngle / 2);
+        canvas.translate(posX, posY);
         canvas.drawArc(
             Rect.fromCenter(
               center: center,
-              width: center.dx * 2 - 5,
-              height: center.dx * 2 - 5,
+              width: length * 2 - 15,
+              height: length * 2 - 15,
             ),
-            calculatedStartAngle + (pi * 0.01),
-            calculateArcLength(chartValue) - (pi * 0.01) * 2,
+            cStartAngle,
+            cSliceAngle,
             true,
             getFillPaint(sliceFillColors[index]));
+        canvas.restore();
       } else {
         drawArc(
             canvas,
             Rect.fromCenter(
               center: center,
-              width: center.dx * 2 - 20,
-              height: center.dx * 2 - 20,
+              width: length * 2 - 25,
+              height: length * 2 - 25,
             ),
             calculatedStartAngle,
             chartValue,
