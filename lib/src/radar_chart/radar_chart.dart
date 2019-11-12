@@ -23,7 +23,8 @@ import 'package:multi_charts/src/radar_chart/utils/painters/radar_chart_painter.
 /// [maxHeight] and [maxWidth] defines the maximum width and height of the chart when
 /// no parent contraints are applied, otherwise ignored.
 ///
-/// [textScaleFactor] defines the factor by which the label's textSize should increase,
+/// [textScaleFactor] defines the factor by which the label's textSize increases with
+/// respect to the average of width and height of the enclosing parent widget,
 /// if not provided defaults to 0.04
 ///
 /// [labelWidth] defines the maximum width of the labels, if not provided, defaults to
@@ -40,6 +41,9 @@ import 'package:multi_charts/src/radar_chart/utils/painters/radar_chart_painter.
 /// defaults to 1500 milliseconds.
 ///
 /// [curve] defines the animation's progress in a non-linear fashion.
+///
+/// [chartRadiusFactor] defines the factor by which the chart radius increases with respect
+/// to width or height (whatever is minimum). If not provided, defaults to 0.8 (80%)
 class RadarChart extends StatefulWidget {
   final List<double> values;
   final List<String> labels;
@@ -56,6 +60,7 @@ class RadarChart extends StatefulWidget {
   final bool animate;
   final Duration animationDuration;
   final Curve curve;
+  final double chartRadiusFactor;
 
   RadarChart(
       {Key key,
@@ -73,7 +78,8 @@ class RadarChart extends StatefulWidget {
       this.maxLinesForLabels,
       this.animate = true,
       this.animationDuration = const Duration(milliseconds: 1500),
-      this.curve = Curves.easeIn});
+      this.curve = Curves.easeIn,
+      this.chartRadiusFactor = 0.8});
 
   @override
   _RadarChartState createState() => _RadarChartState();
@@ -97,7 +103,7 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
     if (widget.values.length < 3) {
       throw ArgumentError("Minimum 3 values are required for Radar chart");
     }
-    if (widget.values.length != widget.labels.length) {
+    if (widget.labels != null && widget.values.length != widget.labels.length) {
       throw ArgumentError("values and labels should have same size");
     }
     _dataAnimationController = AnimationController(
@@ -129,7 +135,8 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
       throw ArgumentError("All values of graph should be less than maxValue");
     } else if (widget.values.length < 3) {
       throw ArgumentError("Minimum 3 values are required for Radar chart");
-    } else if (widget.values.length != widget.labels.length) {
+    } else if (widget.labels != null &&
+        widget.values.length != widget.labels.length) {
       throw ArgumentError("values and labels should have same size");
     } else if (widget.animate) {
       if (oldWidget.animationDuration != widget.animationDuration) {
@@ -183,7 +190,8 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
               widget.labelWidth,
               widget.maxLinesForLabels,
               widget.animate ? dataAnimationPercent : 1.0,
-              widget.animate ? outlineAnimationPercent : 1.0),
+              widget.animate ? outlineAnimationPercent : 1.0,
+              widget.chartRadiusFactor),
           size: widget.size,
         ),
       ),

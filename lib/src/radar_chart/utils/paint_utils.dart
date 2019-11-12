@@ -98,14 +98,15 @@ class PaintUtils {
       Color strokeColor,
       double maxValue,
       int noOfPoints,
-      double animationPercent) {
+      double animationPercent,
+      double chartRadius) {
     var boundaryPoints = List<Offset>();
     var outerPoints = List<Offset>();
     for (var i = 0; i < maxValue; i += maxValue ~/ 5) {
       boundaryPoints.clear();
       for (var j = 0; j < noOfPoints; j++) {
-        var x = animationPercent * center.dy / 2 * cos(angle * j - pi / 2);
-        var y = animationPercent * center.dy / 2 * sin(angle * j - pi / 2);
+        var x = animationPercent * chartRadius * cos(angle * j - pi / 2);
+        var y = animationPercent * chartRadius * sin(angle * j - pi / 2);
         x -= x * i / maxValue;
         y -= y * i / maxValue;
         boundaryPoints.add(Offset(x, y) + center);
