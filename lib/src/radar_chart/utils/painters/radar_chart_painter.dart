@@ -1,4 +1,4 @@
-import 'dart:math' show pi, cos, sin;
+import 'dart:math' show cos, min, pi, sin;
 
 import 'package:flutter/material.dart';
 import 'package:multi_charts/src/radar_chart/utils/paint_utils.dart';
@@ -6,7 +6,7 @@ import 'package:multi_charts/src/radar_chart/utils/paint_utils.dart';
 /// Custom Painter class for drawing the chart. Depends on various parameters like
 /// [RadarChart.values], [RadarChart.labels], [RadarChart.maxValue], [RadarChart.fillColor],
 /// [RadarChart.strokeColor], [RadarChart.labelColor], [RadarChart.textScaleFactor], [RadarChart.labelWidth],
-/// [RadarChart.maxLinesForLabels].
+/// [RadarChart.maxLinesForLabels], [RadarChart.chartRadiusFactor].
 ///
 /// It also has [dataAnimationPercent] and [outlineAnimationPercent] which defines the
 /// animation of the chart data and outlines.
@@ -22,6 +22,7 @@ class RadarChartPainter extends CustomPainter {
   final int maxLinesForLabels;
   final double dataAnimationPercent;
   final double outlineAnimationPercent;
+  final double chartRadiusFactor;
 
   RadarChartPainter(
       this.values,
@@ -34,7 +35,8 @@ class RadarChartPainter extends CustomPainter {
       this.labelWidth,
       this.maxLinesForLabels,
       this.dataAnimationPercent,
-      this.outlineAnimationPercent);
+      this.outlineAnimationPercent,
+      this.chartRadiusFactor);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -42,15 +44,23 @@ class RadarChartPainter extends CustomPainter {
     double angle = (2 * pi) / values.length;
     var valuePoints = List<Offset>();
     for (var i = 0; i < values.length; i++) {
-      var radiusFactor = (values[i] / maxValue) * center.dy / 2;
-      var x = dataAnimationPercent * radiusFactor * cos(angle * i - pi / 2);
-      var y = dataAnimationPercent * radiusFactor * sin(angle * i - pi / 2);
+      var radius = (values[i] / maxValue) *
+          (min(center.dx, center.dy) * chartRadiusFactor);
+      var x = dataAnimationPercent * radius * cos(angle * i - pi / 2);
+      var y = dataAnimationPercent * radius * sin(angle * i - pi / 2);
 
       valuePoints.add(Offset(x, y) + center);
     }
 
-    var outerPoints = PaintUtils.drawChartOutline(canvas, center, angle,
-        strokeColor, maxValue, values.length, outlineAnimationPercent);
+    var outerPoints = PaintUtils.drawChartOutline(
+        canvas,
+        center,
+        angle,
+        strokeColor,
+        maxValue,
+        values.length,
+        outlineAnimationPercent,
+        (min(center.dx, center.dy) * chartRadiusFactor));
     PaintUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
     PaintUtils.drawLabels(
         canvas,

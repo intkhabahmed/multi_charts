@@ -47,6 +47,9 @@ It is a library that provides different types of charts to plot data points. Cur
 
  * **curve** - defines the animation's progress in a non-linear fashion.
 
+ * **chartRadiusFactor** - defines the factor by which the chart radius increases with respect
+ to width or height (whatever is minimum). If not provided, defaults to 0.8 (80%)
+
 ### Screenshot
 
 <img src="https://drive.google.com/uc?export=view&id=1xBM5mTMdU9d49Qo2vrxsq4UmBk2cEaps" alt="Radar Chart Red" width="200" height="400"/>
