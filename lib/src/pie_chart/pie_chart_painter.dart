@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:multi_charts/src/pie_chart/utils/paint_utils.dart';
 
-import 'utils/enums.dart';
+import 'utils/legend_position.dart';
+import 'utils/separated_value.dart';
 
 class PieChartPainter extends CustomPainter {
   final List<double> values;

@@ -1,7 +1,10 @@
 import 'dart:math' show Random, cos, max, min, pi, sin;
 
 import 'package:flutter/material.dart';
-import './enums.dart';
+
+import 'legend_icon_shape.dart';
+import 'legend_position.dart';
+import 'separated_value.dart';
 
 class PaintUtils {
   static double calculateArcLength(double value) {

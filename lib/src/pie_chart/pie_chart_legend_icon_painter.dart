@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'utils/enums.dart';
+import 'utils/legend_icon_shape.dart';
 import 'utils/paint_utils.dart';
 
 class PieChartLegendIconPainter extends CustomPainter {

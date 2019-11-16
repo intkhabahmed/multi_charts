@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:multi_charts/src/radar_chart/utils/painters/radar_chart_painter.dart';
 
 /// A chart which plots the values in the form of a spider web or radar. It takes the
-/// @required[values] parameter which provides the data points and @required[maxValue]
-/// which defines the scale of the graph. Minimum 3 values are required. E.g. The chart contains five levels, if
+/// @required[values] parameter which provides the data points `(minimum 3 values are required)` and @required[maxValue]
+/// which defines the scale of the graph. E.g. The chart contains five levels, if
 /// [maxValue]=10, then each level will have the value '2'.
 ///
 /// The other parameters are optional which define different behaviours for the chart like:
@@ -18,7 +18,7 @@ import 'package:multi_charts/src/radar_chart/utils/painters/radar_chart_painter.
 ///
 /// [strokeColor] defines the color of the chart outlines, defaults to [Colors.black87].
 ///
-/// [labelColor] defines the color of the chart labels, defaults to [Colors.white].
+/// [labelColor] defines the color of the chart labels, defaults to [Colors.black].
 ///
 /// [maxHeight] and [maxWidth] defines the maximum width and height of the chart when
 /// no parent contraints are applied, otherwise ignored.
@@ -62,6 +62,11 @@ class RadarChart extends StatefulWidget {
   final Curve curve;
   final double chartRadiusFactor;
 
+  /// Creates a chart which plots the values in the form of a spider web or radar.
+  ///
+  /// It takes the @required `values` parameter which provides the data points (`minimum 3 values` are required) and @required `maxValue`
+  /// which defines the scale of the graph. E.g. The chart contains five levels, if
+  /// `maxValue=10`, then each level will have the value '2'.
   RadarChart(
       {Key key,
       @required this.values,

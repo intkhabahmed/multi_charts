@@ -7,7 +7,7 @@ It is a library that provides different types of charts to plot data points. Cur
 ## Radar Chart
 
  A chart which plots the values in the form of a spider web or radar. It takes the
- @required **values** parameter which provides the data points and @required **maxValue**
+ @required **values** parameter which provides the data points **(minimum 3 values are required)** and @required **maxValue**
  which defines the scale of the graph. E.g. The chart contains five levels, if
  **maxValue**=10, then each level will have the value '2'.
 
@@ -24,7 +24,7 @@ It is a library that provides different types of charts to plot data points. Cur
 
  * **strokeColor** - defines the color of the chart outlines, defaults to **Colors.black87**.
 
- * **labelColor** - defines the color of the chart labels, defaults to **Colors.white**.
+ * **labelColor** - defines the color of the chart labels, defaults to **Colors.black**.
 
  * **maxHeight** and **maxWidth** - defines the maximum width and height of the chart when
  no parent constraints are applied, otherwise ignored.

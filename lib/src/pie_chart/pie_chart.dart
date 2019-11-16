@@ -3,7 +3,9 @@ import 'package:multi_charts/src/pie_chart/pie_chart_painter.dart';
 import 'package:multi_charts/src/pie_chart/utils/paint_utils.dart';
 
 import 'pie_chart_legend_icon_painter.dart';
-import 'utils/enums.dart';
+import 'utils/legend_icon_shape.dart';
+import 'utils/legend_position.dart';
+import 'utils/separated_value.dart';
 
 class PieChart extends StatefulWidget {
   final List<double> values;
