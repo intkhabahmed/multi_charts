@@ -7,11 +7,13 @@ class PieChartLegendIconPainter extends CustomPainter {
   final Color legendIconFillColor;
   final double legendIconSize;
   final LegendIconShape legendIconShape;
+  final double animationPercent;
 
   const PieChartLegendIconPainter(
     this.legendIconFillColor,
     this.legendIconSize,
     this.legendIconShape,
+    this.animationPercent,
   );
 
   @override
@@ -20,14 +22,14 @@ class PieChartLegendIconPainter extends CustomPainter {
     PaintUtils.drawLegend(
       canvas,
       center,
-      legendIconSize,
+      legendIconSize * animationPercent,
       legendIconShape,
       legendIconFillColor,
     );
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(PieChartLegendIconPainter oldDelegate) {
+    return animationPercent != oldDelegate.animationPercent;
   }
 }

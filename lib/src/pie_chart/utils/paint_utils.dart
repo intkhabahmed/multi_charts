@@ -20,11 +20,8 @@ class PaintUtils {
       bool separateFocusedValue,
       SeparatedValue separatedValueType,
       double startAngle,
-      bool randomStartAngle,
       LegendPosition legendPosition) {
-    double calculatedStartAngle =
-        (randomStartAngle ? Random().nextDouble() : 1) *
-            (startAngle * (pi / 180));
+    double calculatedStartAngle = (startAngle * (pi / 180));
     values.asMap().forEach((index, chartValue) {
       var length = legendPosition == LegendPosition.Bottom ||
               legendPosition == LegendPosition.Top

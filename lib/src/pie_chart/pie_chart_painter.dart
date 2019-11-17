@@ -12,8 +12,8 @@ class PieChartPainter extends CustomPainter {
   final bool separateFocusedValue;
   final SeparatedValue separatedValueType;
   final double startAngle;
-  final bool randomStartAngle;
   final LegendPosition legendPosition;
+  final double dataAnimationPercent;
 
   PieChartPainter(
       this.values,
@@ -23,8 +23,8 @@ class PieChartPainter extends CustomPainter {
       this.separateFocusedValue,
       this.separatedValueType,
       this.startAngle,
-      this.randomStartAngle,
-      this.legendPosition);
+      this.legendPosition,
+      this.dataAnimationPercent);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -32,18 +32,17 @@ class PieChartPainter extends CustomPainter {
     PaintUtils.drawPieChart(
         canvas,
         chartCenter,
-        values,
+        values.map((v) => v * dataAnimationPercent).toList(),
         sliceFillColors,
         PaintUtils.getTextSize(size, textScaleFactor),
         separateFocusedValue,
         separatedValueType,
         startAngle,
-        randomStartAngle,
         legendPosition);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(PieChartPainter oldDelegate) {
+    return dataAnimationPercent != oldDelegate.dataAnimationPercent;
   }
 }

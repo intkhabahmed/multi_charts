@@ -27,7 +27,6 @@ class PieChart extends StatefulWidget {
   final bool separateFocusedValue;
   final SeparatedValue separatedValueType;
   final double startAngle;
-  final bool randomStartAngle;
 
   const PieChart(
       {Key key,
@@ -50,16 +49,20 @@ class PieChart extends StatefulWidget {
       this.curve = Curves.easeIn,
       this.separateFocusedValue = false,
       this.separatedValueType = SeparatedValue.Max,
-      this.startAngle = 180,
-      this.randomStartAngle = false});
+      this.startAngle = 180});
 
   @override
   _PieChartState createState() => _PieChartState();
 }
 
-class _PieChartState extends State<PieChart> {
+class _PieChartState extends State<PieChart>
+    with SingleTickerProviderStateMixin {
   List<Color> _sliceFillColors;
   List<dynamic> _labels;
+  AnimationController _controller;
+  Animation<double> _animation;
+  double _dataAnimationPercent = 0;
+  Animation _curvedAnimation;
 
   @override
   void initState() {
@@ -70,6 +73,20 @@ class _PieChartState extends State<PieChart> {
     _labels = widget.labels != null && widget.labels.length > 0
         ? widget.labels
         : widget.values.map((v) => "$v%").toList();
+    _controller = AnimationController(
+        vsync: this,
+        duration: widget.animate
+            ? widget.animationDuration
+            : Duration(milliseconds: 1))
+      ..forward();
+    _curvedAnimation =
+        CurvedAnimation(curve: widget.curve, parent: _controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,8 +96,7 @@ class _PieChartState extends State<PieChart> {
       print("Sum ${widget.values.reduce((a, b) => a + b)}");
       throw ArgumentError(
           "The sum of all values should be less than or equal to 100");
-    }
-    if (widget.labels != null &&
+    } else if (widget.labels != null &&
         widget.values?.length != widget.labels?.length) {
       throw ArgumentError("Values and Labels should have same size");
     }
@@ -88,6 +104,20 @@ class _PieChartState extends State<PieChart> {
       _labels = widget.labels != null && widget.labels.length > 0
           ? widget.labels
           : widget.values.map((v) => "$v%").toList();
+    }
+    if (widget.animate) {
+      if (oldWidget.animationDuration != widget.animationDuration) {
+        _controller.duration = widget.animationDuration;
+      }
+      if (oldWidget.curve != widget.curve) {
+        _curvedAnimation =
+            CurvedAnimation(parent: _controller, curve: widget.curve);
+      }
+      setState(() {
+        _controller
+          ..reset()
+          ..forward();
+      });
     }
   }
 
@@ -160,6 +190,12 @@ class _PieChartState extends State<PieChart> {
   }
 
   Widget _chartLayout() {
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_curvedAnimation)
+      ..addListener(() {
+        setState(() {
+          _dataAnimationPercent = _animation.value;
+        });
+      });
     return CustomPaint(
       painter: PieChartPainter(
           widget.values,
@@ -169,8 +205,8 @@ class _PieChartState extends State<PieChart> {
           widget.separateFocusedValue,
           widget.separatedValueType,
           widget.startAngle,
-          widget.randomStartAngle,
-          widget.legendPosition),
+          widget.legendPosition,
+          widget.animate ? _dataAnimationPercent : 1.0),
       size: widget.size,
     );
   }
@@ -185,10 +221,10 @@ class _PieChartState extends State<PieChart> {
           children: <Widget>[
             CustomPaint(
               painter: PieChartLegendIconPainter(
-                _sliceFillColors[index],
-                widget.legendIconSize,
-                widget.legendIconShape,
-              ),
+                  _sliceFillColors[index],
+                  widget.legendIconSize,
+                  widget.legendIconShape,
+                  _dataAnimationPercent),
               size: Size(widget.legendIconSize, widget.legendIconSize),
             ),
             direction == Axis.vertical
