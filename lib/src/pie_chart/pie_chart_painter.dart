@@ -38,7 +38,9 @@ class PieChartPainter extends CustomPainter {
         separateFocusedValue,
         separatedValueType,
         startAngle,
-        legendPosition);
+        legendPosition,
+        dataAnimationPercent == 1.0,
+        labelColor);
   }
 
   @override

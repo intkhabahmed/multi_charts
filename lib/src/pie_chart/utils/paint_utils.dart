@@ -7,6 +7,9 @@ import 'legend_position.dart';
 import 'separated_value.dart';
 
 class PaintUtils {
+  static const double LABEL_X_PADDING = 7.0;
+  static const double LABEL_Y_PADDING = 7.0;
+
   static double calculateArcLength(double value) {
     return (2 * pi / 100.0) * value;
   }
@@ -20,8 +23,10 @@ class PaintUtils {
       bool separateFocusedValue,
       SeparatedValue separatedValueType,
       double startAngle,
-      LegendPosition legendPosition) {
-    double calculatedStartAngle = (startAngle * (pi / 180));
+      LegendPosition legendPosition,
+      bool isAnimationOver,
+      Color labelColor) {
+    double calculatedStartAngle = startAngle * (pi / 180);
     values.asMap().forEach((index, chartValue) {
       var length = legendPosition == LegendPosition.Bottom ||
               legendPosition == LegendPosition.Top
@@ -30,34 +35,63 @@ class PaintUtils {
       if (separateFocusedValue &&
           values.reduce(separatedValueType == SeparatedValue.Max ? max : min) ==
               chartValue) {
-        double cStartAngle = calculatedStartAngle + (pi * 0.01);
-        double cSliceAngle = calculateArcLength(chartValue) - (pi * 0.01) * 2;
+        double cStartAngle = calculatedStartAngle;
+        double cSliceAngle = calculateArcLength(chartValue);
         canvas.save();
-        var posX = 4 * cos(cStartAngle + cSliceAngle / 2);
-        var posY = 4 * sin(cStartAngle + cSliceAngle / 2);
+        var posX = getXPosition(5, cStartAngle + cSliceAngle / 2);
+        var posY = getYPosition(5, cStartAngle + cSliceAngle / 2);
         canvas.translate(posX, posY);
         canvas.drawArc(
             Rect.fromCenter(
               center: center,
-              width: length * 2 - 15,
-              height: length * 2 - 15,
+              width: length * 2 - 25,
+              height: length * 2 - 25,
             ),
             cStartAngle,
             cSliceAngle,
             true,
             getFillPaint(sliceFillColors[index]));
         canvas.restore();
+        if (isAnimationOver) {
+          canvas.save();
+          canvas.translate(
+              getXPosition(
+                  (length * 2 - 25) / 3, cStartAngle + cSliceAngle / 2),
+              getYPosition(
+                  (length * 2 - 25) / 3, cStartAngle + cSliceAngle / 2));
+          drawLabelText(canvas, chartValue, textSize, labelColor, center,
+              (cStartAngle + cSliceAngle / 2) * (180 / pi) - startAngle);
+          canvas.restore();
+        }
       } else {
-        drawArc(
-            canvas,
+        canvas.drawArc(
             Rect.fromCenter(
               center: center,
-              width: length * 2 - 25,
-              height: length * 2 - 25,
+              width: length * 2 - 35,
+              height: length * 2 - 35,
             ),
             calculatedStartAngle,
-            chartValue,
+            calculateArcLength(chartValue),
+            true,
             getFillPaint(sliceFillColors[index]));
+        if (isAnimationOver) {
+          canvas.save();
+          canvas.translate(
+              getXPosition((length * 2 - 35) / 3,
+                  calculatedStartAngle + calculateArcLength(chartValue) / 2),
+              getYPosition((length * 2 - 35) / 3,
+                  calculatedStartAngle + calculateArcLength(chartValue) / 2));
+          drawLabelText(
+              canvas,
+              chartValue,
+              textSize,
+              labelColor,
+              center,
+              (calculatedStartAngle + calculateArcLength(chartValue) / 2) *
+                      (180 / pi) -
+                  startAngle);
+          canvas.restore();
+        }
       }
       calculatedStartAngle =
           calculatedStartAngle + calculateArcLength(chartValue);
@@ -87,15 +121,63 @@ class PaintUtils {
             getFillPaint(legendIconFillColor));
   }
 
-  static void drawArc(
-    Canvas canvas,
-    Rect chartRect,
-    double calculatedStartAngle,
-    double chartValue,
-    Paint chartPaint,
-  ) {
-    canvas.drawArc(chartRect, calculatedStartAngle,
-        calculateArcLength(chartValue), true, chartPaint);
+  static void drawLabelText(Canvas canvas, double value, double textSize,
+      Color labelColor, Offset center, double angle) {
+    var textPainter = TextPainter(textDirection: TextDirection.ltr);
+    textPainter.text = TextSpan(
+        text: "$value%",
+        style: TextStyle(color: labelColor, fontSize: textSize));
+    textPainter.textAlign = TextAlign.center;
+
+    textPainter.layout();
+    //top-left
+    if (angle > 180 && angle < 270) {
+      textPainter.paint(
+          canvas,
+          center.translate(-(textPainter.size.width + LABEL_X_PADDING) / 2,
+              -LABEL_Y_PADDING));
+    }
+    //bottom-right
+    else if (angle > 0 && angle < 90) {
+      textPainter.paint(canvas,
+          center.translate(-textPainter.size.width / 2, -LABEL_Y_PADDING / 2));
+    }
+    //top-right
+    else if (angle > 270 && angle < 360) {
+      textPainter.paint(
+          canvas,
+          center.translate(-textPainter.size.width / 2,
+              -textPainter.size.height + LABEL_Y_PADDING));
+    }
+    //bottom-left
+    else if (angle > 90 && angle < 180) {
+      textPainter.paint(canvas,
+          center.translate(-textPainter.size.width / 2, -LABEL_Y_PADDING / 2));
+    }
+    //top-center
+    else if (angle == 270) {
+      textPainter.paint(
+          canvas,
+          center.translate(-(textPainter.size.width / 2),
+              -(textPainter.size.height + LABEL_Y_PADDING / 2)));
+    }
+    //bottom-center
+    else if (angle == 90) {
+      textPainter.paint(canvas,
+          center.translate(-(textPainter.size.width / 2), LABEL_Y_PADDING));
+    }
+    //right-center
+    else if (angle == 0 || angle == 360) {
+      textPainter.paint(canvas,
+          center.translate(LABEL_X_PADDING, -(textPainter.size.height / 2)));
+    }
+    //left-center
+    else if (angle == 180) {
+      textPainter.paint(
+          canvas,
+          center.translate(
+              -(textPainter.size.width), -(textPainter.size.height / 2)));
+    }
   }
 
   /// Returns the Fill Paint object for the graph.
@@ -127,4 +209,10 @@ class PaintUtils {
         (int index) => Color.fromARGB(255, Random().nextInt(200),
             Random().nextInt(200), Random().nextInt(200)));
   }
+
+  static double getXPosition(double radius, double angle) =>
+      radius * cos(angle);
+
+  static double getYPosition(double radius, double angle) =>
+      radius * sin(angle);
 }

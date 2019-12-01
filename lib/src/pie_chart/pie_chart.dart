@@ -15,6 +15,7 @@ class PieChart extends StatefulWidget {
   final double maxWidth;
   final double maxHeight;
   final Color labelColor;
+  final Color legendTextColor;
   final LegendPosition legendPosition;
   final double legendIconSize;
   final double legendTextSize;
@@ -27,6 +28,7 @@ class PieChart extends StatefulWidget {
   final bool separateFocusedValue;
   final SeparatedValue separatedValueType;
   final double startAngle;
+  final bool showLegend;
 
   const PieChart(
       {Key key,
@@ -37,6 +39,7 @@ class PieChart extends StatefulWidget {
       this.maxWidth = 200,
       this.maxHeight = 200,
       this.labelColor = Colors.black,
+      this.legendTextColor = Colors.black,
       this.legendPosition = LegendPosition.Right,
       this.legendIconSize = 10,
       this.legendTextSize = 16.0,
@@ -49,7 +52,8 @@ class PieChart extends StatefulWidget {
       this.curve = Curves.easeIn,
       this.separateFocusedValue = false,
       this.separatedValueType = SeparatedValue.Max,
-      this.startAngle = 180});
+      this.startAngle = 180,
+      this.showLegend = true});
 
   @override
   _PieChartState createState() => _PieChartState();
@@ -63,12 +67,13 @@ class _PieChartState extends State<PieChart>
   Animation<double> _animation;
   double _dataAnimationPercent = 0;
   Animation _curvedAnimation;
+  TextStyle _legendTextStyle = TextStyle(fontSize: 0);
 
   @override
   void initState() {
     super.initState();
     _sliceFillColors = widget.sliceFillColors == null
-        ? PaintUtils.getRandomColors(widget.labels?.length)
+        ? PaintUtils.getRandomColors(widget.values?.length)
         : widget.sliceFillColors;
     _labels = widget.labels != null && widget.labels.length > 0
         ? widget.labels
@@ -99,6 +104,10 @@ class _PieChartState extends State<PieChart>
     } else if (widget.labels != null &&
         widget.values?.length != widget.labels?.length) {
       throw ArgumentError("Values and Labels should have same size");
+    } else if (widget.sliceFillColors != null &&
+        widget.sliceFillColors?.length != widget.values?.length) {
+      throw ArgumentError(
+          "Values, SliceColors and Labels should have same size");
     }
     if (widget.labels != oldWidget.labels) {
       _labels = widget.labels != null && widget.labels.length > 0
@@ -119,6 +128,9 @@ class _PieChartState extends State<PieChart>
           ..forward();
       });
     }
+    _sliceFillColors = widget.sliceFillColors == null
+        ? PaintUtils.getRandomColors(widget.values?.length)
+        : widget.sliceFillColors;
   }
 
   @override
@@ -126,7 +138,9 @@ class _PieChartState extends State<PieChart>
     return LimitedBox(
       maxWidth: widget.maxWidth,
       maxHeight: widget.maxHeight,
-      child: _getLayoutAsPerLegendPosition(widget.legendPosition),
+      child: widget.showLegend
+          ? _getLayoutAsPerLegendPosition(widget.legendPosition)
+          : _chartLayout(),
     );
   }
 
@@ -194,6 +208,8 @@ class _PieChartState extends State<PieChart>
       ..addListener(() {
         setState(() {
           _dataAnimationPercent = _animation.value;
+          _legendTextStyle = TextStyle(
+              fontSize: widget.legendTextSize * _dataAnimationPercent);
         });
       });
     return CustomPaint(
@@ -231,21 +247,27 @@ class _PieChartState extends State<PieChart>
                 ? Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        _labels[index],
-                        style: TextStyle(
-                            color: widget.labelColor,
-                            fontSize: widget.legendTextSize),
+                      child: AnimatedDefaultTextStyle(
+                        style: _legendTextStyle,
+                        curve: widget.curve,
+                        duration: Duration(milliseconds: 500),
+                        child: Text(
+                          _labels[index],
+                          style: TextStyle(color: widget.legendTextColor),
+                        ),
                       ),
                     ),
                   )
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      _labels[index],
-                      style: TextStyle(
-                          color: widget.labelColor,
-                          fontSize: widget.legendTextSize),
+                    child: AnimatedDefaultTextStyle(
+                      style: _legendTextStyle,
+                      curve: widget.curve,
+                      duration: Duration(milliseconds: 500),
+                      child: Text(
+                        _labels[index],
+                        style: TextStyle(color: widget.legendTextColor),
+                      ),
                     ),
                   )
           ],
