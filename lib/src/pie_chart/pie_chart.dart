@@ -7,6 +7,63 @@ import 'utils/legend_icon_shape.dart';
 import 'utils/legend_position.dart';
 import 'utils/separated_value.dart';
 
+/// A chart type which plots the values in the form of a pie with different slices representing
+/// different values. It takes the `@required` [values] parameter which provides the data data to plot
+/// the graph.
+///
+/// The other parameters are optional which define different behaviors for the chart like:
+///
+/// [labels] which will be shown in the graph, if not provided, will default to the value
+/// of data points. If provided, it's length should be same as that of values
+///
+/// [size] which defines the canvas area defaults to [Size.infinite] and is constrained by
+/// the parent widget.
+///
+/// [sliceFillColors] defines the background color of each slice of the graph, if not provided,
+/// random colors will be generated.
+///
+/// [maxHeight] and [maxWidth] defines the maximum width and height of the chart when
+/// no parent constraints are applied, otherwise ignored.
+///
+/// [labelColor] defines the color of the chart values, defaults to [Colors.black87].
+///
+/// [legendTextColor] defines the color of the chart legend text, defaults to [Colors.black].
+///
+/// [legendPosition] defines the position of the chart legend in the layout. It can either be
+/// [LegendPosition.Left], [LegendPosition.Top], [LegendPosition.Right] or [LegendPosition.Bottom].
+/// The default position is [LegendPosition.Right].
+///
+/// [legendIconSize] defines the size of the legend icons. The default size value is `10.0`
+///
+/// [legendTextSize] defines the the text size of the legend labels. The default text size is `16.0`
+///
+/// [legendItemPadding] defines the padding around and in between the legend row items. The default
+/// padding is `8.0`
+///
+/// [legendIconShape] defines the shape of the legend icons. It can either be [LegendIconShape.Circle]
+/// or [LegendIconShape.Square]. The default shape is [LegendIconShape.Square].
+///
+/// [textScaleFactor] defines the factor by which the label's textSize increases with
+/// respect to the average of width and height of the enclosing parent widget,
+/// if not provided defaults to `0.04`
+///
+/// [animate] defines the animation toggle, if true, the chart will animate, else not.
+/// Defaults to `true`.
+///
+/// [animationDuration] defines the duration (in milliseconds) of the animation for the graph. If not provided,
+/// defaults to `1500 milliseconds`.
+///
+/// [curve] defines the animation's progress in a non-linear fashion.
+///
+/// [separateFocusedValue] defines whether we want to highlight focused value (of type: [SeparatedValue.Max]
+/// or [SeparatedValue.Min]) as a slice separated from the chart. By default, it is set to `false`.
+///
+/// [separatedValueType] defines which value slice to show as separated. It can be either [SeparatedValue.Max]
+/// or [SeparatedValue.Min]. The default value is [SeparatedValue.Max]
+///
+/// [startAngle] defines the start angle (in degrees) of the chart's radial position. The default value is `180`.
+///
+/// [showLegend] defines whether to show the chart legend or not. By default, it is set to `true`.
 class PieChart extends StatefulWidget {
   final List<double> values;
   final List<String> labels;
@@ -41,10 +98,9 @@ class PieChart extends StatefulWidget {
       this.labelColor = Colors.black,
       this.legendTextColor = Colors.black,
       this.legendPosition = LegendPosition.Right,
-      this.legendIconSize = 10,
+      this.legendIconSize = 10.0,
       this.legendTextSize = 16.0,
-      this.legendItemPadding =
-          const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      this.legendItemPadding = const EdgeInsets.all(8.0),
       this.legendIconShape = LegendIconShape.Square,
       this.textScaleFactor = 0.04,
       this.animate = true,

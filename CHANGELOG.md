@@ -16,3 +16,8 @@
 
 * Added **chartRadiusFactor** parameter to set the scaling of the chart with respect to width or height (whatever is minimum) of the parent widget, default value is **0.8 (80%)**.
 * Fixed exception handling for null labels.
+
+## [0.2.0] - 24/12/2019
+
+* Added support for **Pie Chart** with lots of customizations.
+* Changes in Readme file
