@@ -15,10 +15,11 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text("Radar Chart Example"),
         ),
-        body: Center(
-          child: Container(
+        body: Column(children: [
+          Container(
             width: 450,
             height: 450,
+            //Radar Chart
             child: RadarChart(
               values: [1, 2, 4, 7, 9, 0, 6],
               labels: [
@@ -32,9 +33,24 @@ class MyApp extends StatelessWidget {
               ],
               maxValue: 10,
               fillColor: Colors.blue,
+              chartRadiusFactor: 0.7,
             ),
           ),
-        ),
+          //Pie Chart
+          PieChart(
+            values: [15, 10, 30, 25, 20],
+            labels: ["Label1", "Label2", "Label3", "Label4", "Label5"],
+            sliceFillColors: [
+              Colors.blueAccent,
+              Colors.greenAccent,
+              Colors.pink,
+              Colors.orange,
+              Colors.red,
+            ],
+            animationDuration: Duration(milliseconds: 1500),
+            legendPosition: LegendPosition.Right,
+          ),
+        ]),
       ),
     );
   }

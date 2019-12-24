@@ -24,6 +24,9 @@ script:
   - flutter analyze --no-pub --no-current-package lib
   - flutter test
   - flutter packages pub publish --dry-run
+branches:
+  only:
+    - master
 cache:
   directories:
     - $HOME/.pub-cache

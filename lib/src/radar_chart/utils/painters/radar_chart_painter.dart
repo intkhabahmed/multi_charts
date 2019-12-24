@@ -5,7 +5,7 @@ import 'package:multi_charts/src/radar_chart/utils/paint_utils.dart';
 
 /// Custom Painter class for drawing the chart. Depends on various parameters like
 /// [RadarChart.values], [RadarChart.labels], [RadarChart.maxValue], [RadarChart.fillColor],
-/// [RadarChart.strokeColor], [RadarChart.labelColor], [RadarChart.textScaleFactor], [RadarChart.labelWidth],
+/// [RadarChart.strokeColor], [RadarChart.legendTextColor], [RadarChart.textScaleFactor], [RadarChart.labelWidth],
 /// [RadarChart.maxLinesForLabels], [RadarChart.chartRadiusFactor].
 ///
 /// It also has [dataAnimationPercent] and [outlineAnimationPercent] which defines the
