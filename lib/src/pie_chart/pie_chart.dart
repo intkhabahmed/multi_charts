@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:multi_charts/src/common/common_paint_utils.dart';
 import 'package:multi_charts/src/pie_chart/pie_chart_painter.dart';
-import 'package:multi_charts/src/pie_chart/utils/paint_utils.dart';
 
 import 'pie_chart_legend_icon_painter.dart';
 import 'utils/legend_icon_shape.dart';
@@ -129,7 +129,7 @@ class _PieChartState extends State<PieChart>
   void initState() {
     super.initState();
     _sliceFillColors = widget.sliceFillColors == null
-        ? PaintUtils.getRandomColors(widget.values?.length)
+        ? CommonPaintUtils.getRandomColors(widget.values?.length)
         : widget.sliceFillColors;
     _labels = widget.labels != null && widget.labels.length > 0
         ? widget.labels
@@ -185,7 +185,7 @@ class _PieChartState extends State<PieChart>
       });
     }
     _sliceFillColors = widget.sliceFillColors == null
-        ? PaintUtils.getRandomColors(widget.values?.length)
+        ? CommonPaintUtils.getRandomColors(widget.values?.length)
         : widget.sliceFillColors;
   }
 

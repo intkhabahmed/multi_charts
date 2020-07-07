@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:multi_charts/src/pie_chart/utils/paint_utils.dart';
+import 'package:multi_charts/src/common/common_paint_utils.dart';
+import 'package:multi_charts/src/pie_chart/utils/pie_chart_draw_utils.dart';
 
 import 'utils/legend_position.dart';
 import 'utils/separated_value.dart';
@@ -29,12 +30,12 @@ class PieChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Offset chartCenter = Offset(size.width / 2, size.height / 2);
-    PaintUtils.drawPieChart(
+    PieChartDrawUtils.drawPieChart(
         canvas,
         chartCenter,
         values.map((v) => v * dataAnimationPercent).toList(),
         sliceFillColors,
-        PaintUtils.getTextSize(size, textScaleFactor),
+        CommonPaintUtils.getTextSize(size, textScaleFactor),
         separateFocusedValue,
         separatedValueType,
         startAngle,

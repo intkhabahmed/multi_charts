@@ -1,19 +1,15 @@
-import 'dart:math' show Random, cos, max, min, pi, sin;
+import 'dart:math' show cos, max, min, pi, sin;
 
 import 'package:flutter/material.dart';
+import 'package:multi_charts/src/common/common_paint_utils.dart';
 
 import 'legend_icon_shape.dart';
 import 'legend_position.dart';
 import 'separated_value.dart';
 
-class PaintUtils {
-  static const double LABEL_X_PADDING = 7.0;
-  static const double LABEL_Y_PADDING = 7.0;
-
-  static double calculateArcLength(double value) {
-    return (2 * pi / 100.0) * value;
-  }
-
+/// Helper class to draw the different pie chart elements.
+class PieChartDrawUtils {
+  /// Draws the Pie Chart
   static void drawPieChart(
       Canvas canvas,
       Offset center,
@@ -36,7 +32,7 @@ class PaintUtils {
           values.reduce(separatedValueType == SeparatedValue.Max ? max : min) ==
               chartValue) {
         double cStartAngle = calculatedStartAngle;
-        double cSliceAngle = calculateArcLength(chartValue);
+        double cSliceAngle = CommonPaintUtils.calculateArcLength(chartValue);
         canvas.save();
         var posX = getXPosition(5, cStartAngle + cSliceAngle / 2);
         var posY = getYPosition(5, cStartAngle + cSliceAngle / 2);
@@ -50,7 +46,7 @@ class PaintUtils {
             cStartAngle,
             cSliceAngle,
             true,
-            getFillPaint(sliceFillColors[index]));
+            CommonPaintUtils.getFillPaint(sliceFillColors[index]));
         canvas.restore();
         if (isAnimationOver) {
           canvas.save();
@@ -71,35 +67,41 @@ class PaintUtils {
               height: length * 2 - 35,
             ),
             calculatedStartAngle,
-            calculateArcLength(chartValue),
+            CommonPaintUtils.calculateArcLength(chartValue),
             true,
-            getFillPaint(sliceFillColors[index]));
+            CommonPaintUtils.getFillPaint(sliceFillColors[index]));
         if (isAnimationOver) {
           canvas.save();
           canvas.translate(
-              getXPosition((length * 2 - 35) / 3,
-                  calculatedStartAngle + calculateArcLength(chartValue) / 2),
-              getYPosition((length * 2 - 35) / 3,
-                  calculatedStartAngle + calculateArcLength(chartValue) / 2));
+              getXPosition(
+                  (length * 2 - 35) / 3,
+                  calculatedStartAngle +
+                      CommonPaintUtils.calculateArcLength(chartValue) / 2),
+              getYPosition(
+                  (length * 2 - 35) / 3,
+                  calculatedStartAngle +
+                      CommonPaintUtils.calculateArcLength(chartValue) / 2));
           drawLabelText(
               canvas,
               chartValue,
               textSize,
               labelColor,
               center,
-              (calculatedStartAngle + calculateArcLength(chartValue) / 2) *
+              (calculatedStartAngle +
+                          CommonPaintUtils.calculateArcLength(chartValue) / 2) *
                       (180 / pi) -
                   startAngle);
           canvas.restore();
         }
       }
-      calculatedStartAngle =
-          calculatedStartAngle + calculateArcLength(chartValue);
+      calculatedStartAngle = calculatedStartAngle +
+          CommonPaintUtils.calculateArcLength(chartValue);
     });
-    canvas.drawCircle(center, 2.0, getFillPaint(Colors.black));
+    //canvas.drawCircle(center, center.dx / 2.5, CommonPaintUtils.getFillPaint(Colors.transparent)..blendMode=BlendMode.dstOut);
   }
 
-  static void drawLegend(
+  /// Draws Pie Chart Legend Shape
+  static void drawLegendShape(
     Canvas canvas,
     Offset center,
     double legendIconSize,
@@ -110,7 +112,7 @@ class PaintUtils {
         ? canvas.drawCircle(
             center,
             legendIconSize,
-            getFillPaint(legendIconFillColor),
+            CommonPaintUtils.getFillPaint(legendIconFillColor),
           )
         : canvas.drawRect(
             Rect.fromCenter(
@@ -118,9 +120,10 @@ class PaintUtils {
               width: legendIconSize,
               height: legendIconSize,
             ),
-            getFillPaint(legendIconFillColor));
+            CommonPaintUtils.getFillPaint(legendIconFillColor));
   }
 
+  /// Draws label text inside the Pie Chart
   static void drawLabelText(Canvas canvas, double value, double textSize,
       Color labelColor, Offset center, double angle) {
     var textPainter = TextPainter(textDirection: TextDirection.ltr);
@@ -134,42 +137,53 @@ class PaintUtils {
     if (angle > 180 && angle < 270) {
       textPainter.paint(
           canvas,
-          center.translate(-(textPainter.size.width + LABEL_X_PADDING) / 2,
-              -LABEL_Y_PADDING));
+          center.translate(
+              -(textPainter.size.width + CommonPaintUtils.LABEL_X_PADDING) / 2,
+              -CommonPaintUtils.LABEL_Y_PADDING));
     }
     //bottom-right
     else if (angle > 0 && angle < 90) {
-      textPainter.paint(canvas,
-          center.translate(-textPainter.size.width / 2, -LABEL_Y_PADDING / 2));
+      textPainter.paint(
+          canvas,
+          center.translate(-textPainter.size.width / 2,
+              -CommonPaintUtils.LABEL_Y_PADDING / 2));
     }
     //top-right
     else if (angle > 270 && angle < 360) {
       textPainter.paint(
           canvas,
           center.translate(-textPainter.size.width / 2,
-              -textPainter.size.height + LABEL_Y_PADDING));
+              -textPainter.size.height + CommonPaintUtils.LABEL_Y_PADDING));
     }
     //bottom-left
     else if (angle > 90 && angle < 180) {
-      textPainter.paint(canvas,
-          center.translate(-textPainter.size.width / 2, -LABEL_Y_PADDING / 2));
+      textPainter.paint(
+          canvas,
+          center.translate(-textPainter.size.width / 2,
+              -CommonPaintUtils.LABEL_Y_PADDING / 2));
     }
     //top-center
     else if (angle == 270) {
       textPainter.paint(
           canvas,
-          center.translate(-(textPainter.size.width / 2),
-              -(textPainter.size.height + LABEL_Y_PADDING / 2)));
+          center.translate(
+              -(textPainter.size.width / 2),
+              -(textPainter.size.height +
+                  CommonPaintUtils.LABEL_Y_PADDING / 2)));
     }
     //bottom-center
     else if (angle == 90) {
-      textPainter.paint(canvas,
-          center.translate(-(textPainter.size.width / 2), LABEL_Y_PADDING));
+      textPainter.paint(
+          canvas,
+          center.translate(
+              -(textPainter.size.width / 2), CommonPaintUtils.LABEL_Y_PADDING));
     }
     //right-center
     else if (angle == 0 || angle == 360) {
-      textPainter.paint(canvas,
-          center.translate(LABEL_X_PADDING, -(textPainter.size.height / 2)));
+      textPainter.paint(
+          canvas,
+          center.translate(CommonPaintUtils.LABEL_X_PADDING,
+              -(textPainter.size.height / 2)));
     }
     //left-center
     else if (angle == 180) {
@@ -178,36 +192,6 @@ class PaintUtils {
           center.translate(
               -(textPainter.size.width), -(textPainter.size.height / 2)));
     }
-  }
-
-  /// Returns the Fill Paint object for the graph.
-  static Paint getFillPaint(Color fillColor) {
-    return Paint()
-      ..color = fillColor
-      ..style = PaintingStyle.fill;
-  }
-
-  ///Returns the Stroke Paint object for the graph.
-  static Paint getStrokePaint(
-      Color strokeColor, int alpha, double strokeWidth) {
-    return Paint()
-      ..color = Color.fromARGB(
-          alpha, strokeColor.red, strokeColor.green, strokeColor.blue)
-      ..isAntiAlias = true
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-  }
-
-  /// Calculates the text size for the labels based on canvas size and [RadarChart.textScaleFactor]
-  static double getTextSize(Size size, double textScaleFactor) {
-    return (size.height + size.width) / 2 * textScaleFactor;
-  }
-
-  static List<Color> getRandomColors(int length) {
-    return List.generate(
-        length,
-        (int index) => Color.fromARGB(255, Random().nextInt(200),
-            Random().nextInt(200), Random().nextInt(200)));
   }
 
   static double getXPosition(double radius, double angle) =>

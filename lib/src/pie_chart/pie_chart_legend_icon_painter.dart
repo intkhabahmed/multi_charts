@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'utils/legend_icon_shape.dart';
-import 'utils/paint_utils.dart';
+import 'utils/pie_chart_draw_utils.dart';
 
 class PieChartLegendIconPainter extends CustomPainter {
   final Color legendIconFillColor;
@@ -19,7 +19,7 @@ class PieChartLegendIconPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Offset center = Offset(size.width / 2, size.height / 2);
-    PaintUtils.drawLegend(
+    PieChartDrawUtils.drawLegendShape(
       canvas,
       center,
       legendIconSize * animationPercent,

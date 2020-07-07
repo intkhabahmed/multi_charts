@@ -1,7 +1,8 @@
 import 'dart:math' show cos, min, pi, sin;
 
 import 'package:flutter/material.dart';
-import 'package:multi_charts/src/radar_chart/utils/paint_utils.dart';
+import 'package:multi_charts/src/common/common_paint_utils.dart';
+import 'package:multi_charts/src/radar_chart/utils/radar_chart_draw_utils.dart';
 
 /// Custom Painter class for drawing the chart. Depends on various parameters like
 /// [RadarChart.values], [RadarChart.labels], [RadarChart.maxValue], [RadarChart.fillColor],
@@ -52,7 +53,7 @@ class RadarChartPainter extends CustomPainter {
       valuePoints.add(Offset(x, y) + center);
     }
 
-    var outerPoints = PaintUtils.drawChartOutline(
+    var outerPoints = RadarChartDrawUtils.drawChartOutline(
         canvas,
         center,
         angle,
@@ -61,15 +62,16 @@ class RadarChartPainter extends CustomPainter {
         values.length,
         outlineAnimationPercent,
         (min(center.dx, center.dy) * chartRadiusFactor));
-    PaintUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
-    PaintUtils.drawLabels(
+    RadarChartDrawUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
+    RadarChartDrawUtils.drawLabels(
         canvas,
         center,
         labels ?? values.map((v) => v.toString()).toList(),
         outerPoints,
-        PaintUtils.getTextSize(size, textScaleFactor),
-        labelWidth ?? PaintUtils.getDefaultLabelWidth(size, center, angle),
-        maxLinesForLabels ?? PaintUtils.getDefaultMaxLinesForLabels(size),
+        CommonPaintUtils.getTextSize(size, textScaleFactor),
+        labelWidth ??
+            CommonPaintUtils.getDefaultLabelWidth(size, center, angle),
+        maxLinesForLabels ?? CommonPaintUtils.getDefaultMaxLinesForLabels(size),
         labelColor);
   }
 
