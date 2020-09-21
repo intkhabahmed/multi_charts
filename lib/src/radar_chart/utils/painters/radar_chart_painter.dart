@@ -23,6 +23,7 @@ class RadarChartPainter extends CustomPainter {
   final double dataAnimationPercent;
   final double outlineAnimationPercent;
   final double chartRadiusFactor;
+  final bool showPoint;
 
   RadarChartPainter(
       this.values,
@@ -36,7 +37,8 @@ class RadarChartPainter extends CustomPainter {
       this.maxLinesForLabels,
       this.dataAnimationPercent,
       this.outlineAnimationPercent,
-      this.chartRadiusFactor);
+      this.chartRadiusFactor,
+      [this.showPoint = false]);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -44,23 +46,28 @@ class RadarChartPainter extends CustomPainter {
     double angle = (2 * pi) / values.length;
     var valuePoints = List<Offset>();
     for (var i = 0; i < values.length; i++) {
-      var radius = (values[i] / maxValue) *
-          (min(center.dx, center.dy) * chartRadiusFactor);
+      var radius = (values[i] / maxValue) * (min(center.dx, center.dy) * chartRadiusFactor);
       var x = dataAnimationPercent * radius * cos(angle * i - pi / 2);
       var y = dataAnimationPercent * radius * sin(angle * i - pi / 2);
 
       valuePoints.add(Offset(x, y) + center);
     }
 
-    var outerPoints = PaintUtils.drawChartOutline(
-        canvas,
-        center,
-        angle,
-        strokeColor,
-        maxValue,
-        values.length,
-        outlineAnimationPercent,
-        (min(center.dx, center.dy) * chartRadiusFactor));
+    if (showPoint) {
+      Paint brush = Paint()
+        ..color = fillColor
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 30;
+      valuePoints.forEach(
+        (element) {
+          canvas.drawCircle(element, size.width > size.height ? size.height / 100 : size.width / 100, brush);
+        },
+      );
+    }
+
+    var outerPoints = PaintUtils.drawChartOutline(canvas, center, angle, strokeColor, maxValue, values.length,
+        outlineAnimationPercent, (min(center.dx, center.dy) * chartRadiusFactor));
     PaintUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
     PaintUtils.drawLabels(
         canvas,
