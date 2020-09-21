@@ -45,6 +45,7 @@ class RadarChartPainter extends CustomPainter {
     Offset center = Offset(size.width / 2.0, size.height / 2.0);
     double angle = (2 * pi) / values.length;
     var valuePoints = List<Offset>();
+
     for (var i = 0; i < values.length; i++) {
       var radius = (values[i] / maxValue) * (min(center.dx, center.dy) * chartRadiusFactor);
       var x = dataAnimationPercent * radius * cos(angle * i - pi / 2);
@@ -66,8 +67,17 @@ class RadarChartPainter extends CustomPainter {
       );
     }
 
-    var outerPoints = PaintUtils.drawChartOutline(canvas, center, angle, strokeColor, maxValue, values.length,
-        outlineAnimationPercent, (min(center.dx, center.dy) * chartRadiusFactor));
+    var outerPoints = PaintUtils.drawChartOutline(
+      canvas,
+      center,
+      angle,
+      strokeColor,
+      maxValue,
+      values.length,
+      outlineAnimationPercent,
+      (min(center.dx, center.dy) * chartRadiusFactor),
+    );
+
     PaintUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
     PaintUtils.drawLabels(
         canvas,
