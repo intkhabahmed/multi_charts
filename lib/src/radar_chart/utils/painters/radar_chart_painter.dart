@@ -23,54 +23,77 @@ class RadarChartPainter extends CustomPainter {
   final double dataAnimationPercent;
   final double outlineAnimationPercent;
   final double chartRadiusFactor;
+  final bool showPoint;
+  final double pointRadius;
 
   RadarChartPainter(
-      this.values,
-      this.labels,
-      this.maxValue,
-      this.fillColor,
-      this.strokeColor,
-      this.labelColor,
-      this.textScaleFactor,
-      this.labelWidth,
-      this.maxLinesForLabels,
-      this.dataAnimationPercent,
-      this.outlineAnimationPercent,
-      this.chartRadiusFactor);
+    this.values,
+    this.labels,
+    this.maxValue,
+    this.fillColor,
+    this.strokeColor,
+    this.labelColor,
+    this.textScaleFactor,
+    this.labelWidth,
+    this.maxLinesForLabels,
+    this.dataAnimationPercent,
+    this.outlineAnimationPercent,
+    this.chartRadiusFactor,
+    this.showPoint,
+    this.pointRadius,
+  );
 
   @override
   void paint(Canvas canvas, Size size) {
     Offset center = Offset(size.width / 2.0, size.height / 2.0);
     double angle = (2 * pi) / values.length;
     var valuePoints = List<Offset>();
+
     for (var i = 0; i < values.length; i++) {
-      var radius = (values[i] / maxValue) *
-          (min(center.dx, center.dy) * chartRadiusFactor);
+      var radius = (values[i] / maxValue) * (min(center.dx, center.dy) * chartRadiusFactor);
       var x = dataAnimationPercent * radius * cos(angle * i - pi / 2);
       var y = dataAnimationPercent * radius * sin(angle * i - pi / 2);
 
       valuePoints.add(Offset(x, y) + center);
     }
 
+    if (showPoint) {
+      Paint brush = Paint()
+        ..color = fillColor
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 30;
+      valuePoints.forEach(
+        (element) {
+          pointRadius == 0.0
+              ? canvas.drawCircle(element, size.width > size.height ? size.height / 100 : size.width / 100, brush)
+              : canvas.drawCircle(element, pointRadius, brush);
+        },
+      );
+    }
+
     var outerPoints = PaintUtils.drawChartOutline(
-        canvas,
-        center,
-        angle,
-        strokeColor,
-        maxValue,
-        values.length,
-        outlineAnimationPercent,
-        (min(center.dx, center.dy) * chartRadiusFactor));
+      canvas,
+      center,
+      angle,
+      strokeColor,
+      maxValue,
+      values.length,
+      outlineAnimationPercent,
+      (min(center.dx, center.dy) * chartRadiusFactor),
+    );
+
     PaintUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
     PaintUtils.drawLabels(
-        canvas,
-        center,
-        labels ?? values.map((v) => v.toString()).toList(),
-        outerPoints,
-        PaintUtils.getTextSize(size, textScaleFactor),
-        labelWidth ?? PaintUtils.getDefaultLabelWidth(size, center, angle),
-        maxLinesForLabels ?? PaintUtils.getDefaultMaxLinesForLabels(size),
-        labelColor);
+      canvas,
+      center,
+      labels ?? values.map((v) => v.toString()).toList(),
+      outerPoints,
+      PaintUtils.getTextSize(size, textScaleFactor),
+      labelWidth ?? PaintUtils.getDefaultLabelWidth(size, center, angle),
+      maxLinesForLabels ?? PaintUtils.getDefaultMaxLinesForLabels(size),
+      labelColor,
+    );
   }
 
   @override

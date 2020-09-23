@@ -46,6 +46,10 @@ It is a library that provides different types of charts to plot data points. Cur
  * **chartRadiusFactor** - defines the factor by which the chart radius increases with respect
  to width or height (whatever is minimum). If not provided, defaults to **0.8 (80%)**.
 
+ * **showPoint** - which will be shown dot shape of values edges, defaults to **false**.
+
+ * **pointRadius** - defines the radius of point, defaults to **Depends on widget size**.
+
 ### Screenshots
 
 <img src="https://drive.google.com/uc?export=view&id=1xBM5mTMdU9d49Qo2vrxsq4UmBk2cEaps" alt="Radar Chart Red" width="200" height="400"/>
