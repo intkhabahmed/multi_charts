@@ -2,12 +2,10 @@ import 'dart:math' show cos, pi, sin;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:multi_charts/src/common/common_paint_utils.dart';
 
-/// Helper class to draw the different chart elements.
-class PaintUtils {
-  static const double LABEL_X_PADDING = 7.0;
-  static const double LABEL_Y_PADDING = 7.0;
-
+/// Helper class to draw the different radar chart elements.
+class RadarChartDrawUtils {
   /// Draws the labels at the given offset positions at the outside of the graph.
   static void drawLabels(
       Canvas canvas,
@@ -32,51 +30,57 @@ class PaintUtils {
         textPainter.paint(
             canvas,
             labelPoints[i].translate(
-                -(textPainter.size.width + LABEL_X_PADDING), -LABEL_Y_PADDING));
+                -(textPainter.size.width + CommonPaintUtils.LABEL_X_PADDING),
+                -CommonPaintUtils.LABEL_Y_PADDING));
       }
       //bottom-right
       else if (labelPoints[i].dx > center.dx && labelPoints[i].dy > center.dy) {
-        textPainter.paint(canvas,
-            labelPoints[i].translate(LABEL_X_PADDING, -LABEL_Y_PADDING / 2));
+        textPainter.paint(
+            canvas,
+            labelPoints[i].translate(CommonPaintUtils.LABEL_X_PADDING,
+                -CommonPaintUtils.LABEL_Y_PADDING / 2));
       }
       //top-right
       else if (labelPoints[i].dx > center.dx && labelPoints[i].dy < center.dy) {
         textPainter.paint(
             canvas,
-            labelPoints[i]
-                .translate(LABEL_X_PADDING, -textPainter.size.height / 2));
+            labelPoints[i].translate(CommonPaintUtils.LABEL_X_PADDING,
+                -textPainter.size.height / 2));
       }
       //bottom-left
       else if (labelPoints[i].dx < center.dx && labelPoints[i].dy > center.dy) {
         textPainter.paint(
             canvas,
             labelPoints[i].translate(
-                -(textPainter.size.width + LABEL_X_PADDING / 2),
-                -LABEL_Y_PADDING / 2));
+                -(textPainter.size.width +
+                    CommonPaintUtils.LABEL_X_PADDING / 2),
+                -CommonPaintUtils.LABEL_Y_PADDING / 2));
       }
       //top-center
       else if (labelPoints[i].dx == center.dx &&
           labelPoints[i].dy < center.dy) {
         textPainter.paint(
             canvas,
-            labelPoints[i].translate(-(textPainter.size.width / 2),
-                -(textPainter.size.height + LABEL_Y_PADDING / 2)));
+            labelPoints[i].translate(
+                -(textPainter.size.width / 2),
+                -(textPainter.size.height +
+                    CommonPaintUtils.LABEL_Y_PADDING / 2)));
       }
       //bottom-center
       else if (labelPoints[i].dx == center.dx &&
           labelPoints[i].dy > center.dy) {
         textPainter.paint(
             canvas,
-            labelPoints[i]
-                .translate(-(textPainter.size.width / 2), LABEL_Y_PADDING));
+            labelPoints[i].translate(-(textPainter.size.width / 2),
+                CommonPaintUtils.LABEL_Y_PADDING));
       }
       //right-center
       else if (labelPoints[i].dx > center.dx &&
           labelPoints[i].dy == center.dy) {
         textPainter.paint(
             canvas,
-            labelPoints[i]
-                .translate(LABEL_X_PADDING, -(textPainter.size.height / 2)));
+            labelPoints[i].translate(CommonPaintUtils.LABEL_X_PADDING,
+                -(textPainter.size.height / 2)));
       }
       //left-center
       else if (labelPoints[i].dx < center.dx &&
@@ -84,7 +88,7 @@ class PaintUtils {
         textPainter.paint(
             canvas,
             labelPoints[i].translate(
-                -(textPainter.size.width + LABEL_X_PADDING),
+                -(textPainter.size.width + CommonPaintUtils.LABEL_X_PADDING),
                 -(textPainter.size.height / 2)));
       }
     }
@@ -100,8 +104,8 @@ class PaintUtils {
       int noOfPoints,
       double animationPercent,
       double chartRadius) {
-    var boundaryPoints = List<Offset>();
-    var outerPoints = List<Offset>();
+    var boundaryPoints = <Offset>[];
+    var outerPoints = <Offset>[];
     for (var i = 0; i < maxValue; i += maxValue ~/ 5) {
       boundaryPoints.clear();
       for (var j = 0; j < noOfPoints; j++) {
@@ -113,14 +117,15 @@ class PaintUtils {
         if (i == 0) {
           outerPoints.add(boundaryPoints[j]);
         }
-        canvas.drawLine(
-            center, boundaryPoints[j], getStrokePaint(strokeColor, 150, 0.3));
+        canvas.drawLine(center, boundaryPoints[j],
+            CommonPaintUtils.getStrokePaint(strokeColor, 150, 0.3));
       }
       boundaryPoints.add(boundaryPoints[0]);
       canvas.drawPoints(PointMode.polygon, boundaryPoints,
-          getStrokePaint(strokeColor, 150, 0.8));
+          CommonPaintUtils.getStrokePaint(strokeColor, 150, 0.8));
     }
-    canvas.drawCircle(center, 2.0, getFillPaint(strokeColor));
+    canvas.drawCircle(
+        center, 2.0, CommonPaintUtils.getFillPaint(strokeColor, alpha: 50));
     return outerPoints;
   }
 
@@ -129,45 +134,9 @@ class PaintUtils {
   static void drawGraphData(Canvas canvas, List<Offset> valuePoints,
       Color fillColor, Color strokeColor) {
     Path valuePath = Path()..addPolygon(valuePoints, true);
-    canvas.drawPath(valuePath, getFillPaint(fillColor));
-    canvas.drawPath(valuePath, getStrokePaint(fillColor, 200, 1.5));
-  }
-
-  /// Returns the Fill Paint object for the graph.
-  static Paint getFillPaint(Color fillColor) {
-    return Paint()
-      ..color =
-          Color.fromARGB(50, fillColor.red, fillColor.green, fillColor.blue)
-      ..style = PaintingStyle.fill;
-  }
-
-  ///Returns the Stroke Paint object for the graph.
-  static Paint getStrokePaint(
-      Color strokeColor, int alpha, double strokeWidth) {
-    return Paint()
-      ..color = Color.fromARGB(
-          alpha, strokeColor.red, strokeColor.green, strokeColor.blue)
-      ..isAntiAlias = true
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-  }
-
-  /// Calculates the text size for the labels based on canvas size and [RadarChart.textScaleFactor]
-  static double getTextSize(Size size, double textScaleFactor) {
-    return (size.height + size.width) / 2 * textScaleFactor;
-  }
-
-  /// Calculates the default width of the label's text, if [labelWidth] is null.
-  static double getDefaultLabelWidth(Size size, Offset center, double angle) {
-    return (size.width -
-            (center.dy / 2) * cos(angle - pi / 2) -
-            PaintUtils.LABEL_X_PADDING) /
-        2.85;
-  }
-
-  /// Calculates the default maximum number of lines for label's text,
-  /// if [maxLinesForLabels] is null.
-  static int getDefaultMaxLinesForLabels(Size size) {
-    return (size.height / 100).ceil();
+    canvas.drawPath(
+        valuePath, CommonPaintUtils.getFillPaint(fillColor, alpha: 50));
+    canvas.drawPath(
+        valuePath, CommonPaintUtils.getStrokePaint(fillColor, 200, 1.5));
   }
 }
