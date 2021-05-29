@@ -1,10 +1,10 @@
 name: multi_charts
 description: A Flutter package providing different types of charts built purely in dart.
-version: 0.2.0
+version: 0.3.0
 homepage: https://github.com/intkhabahmed/multi_charts.git
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:

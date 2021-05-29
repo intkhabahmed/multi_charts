@@ -14,7 +14,7 @@ class PieChartDrawUtils {
       Canvas canvas,
       Offset center,
       List<double> values,
-      List<Color> sliceFillColors,
+      List<Color>? sliceFillColors,
       double textSize,
       bool separateFocusedValue,
       SeparatedValue separatedValueType,
@@ -46,7 +46,7 @@ class PieChartDrawUtils {
             cStartAngle,
             cSliceAngle,
             true,
-            CommonPaintUtils.getFillPaint(sliceFillColors[index]));
+            CommonPaintUtils.getFillPaint(sliceFillColors![index]));
         canvas.restore();
         if (isAnimationOver) {
           canvas.save();
@@ -69,7 +69,7 @@ class PieChartDrawUtils {
             calculatedStartAngle,
             CommonPaintUtils.calculateArcLength(chartValue),
             true,
-            CommonPaintUtils.getFillPaint(sliceFillColors[index]));
+            CommonPaintUtils.getFillPaint(sliceFillColors![index]));
         if (isAnimationOver) {
           canvas.save();
           canvas.translate(

@@ -104,8 +104,8 @@ class RadarChartDrawUtils {
       int noOfPoints,
       double animationPercent,
       double chartRadius) {
-    var boundaryPoints = List<Offset>();
-    var outerPoints = List<Offset>();
+    var boundaryPoints = <Offset>[];
+    var outerPoints = <Offset>[];
     for (var i = 0; i < maxValue; i += maxValue ~/ 5) {
       boundaryPoints.clear();
       for (var j = 0; j < noOfPoints; j++) {

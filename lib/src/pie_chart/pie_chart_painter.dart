@@ -8,7 +8,7 @@ import 'utils/separated_value.dart';
 class PieChartPainter extends CustomPainter {
   final List<double> values;
   final Color labelColor;
-  List<Color> sliceFillColors;
+  List<Color>? sliceFillColors;
   final double textScaleFactor;
   final bool separateFocusedValue;
   final SeparatedValue separatedValueType;
