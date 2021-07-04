@@ -132,10 +132,10 @@ class RadarChartDrawUtils {
   /// Draws the graph data for all the value points with the background color defined by
   /// [RadarChart.fillColor].
   static void drawGraphData(Canvas canvas, List<Offset> valuePoints,
-      Color fillColor, Color strokeColor) {
+      Color fillColor, int fillAlpha, Color strokeColor) {
     Path valuePath = Path()..addPolygon(valuePoints, true);
     canvas.drawPath(
-        valuePath, CommonPaintUtils.getFillPaint(fillColor, alpha: 50));
+        valuePath, CommonPaintUtils.getFillPaint(fillColor, alpha: fillAlpha));
     canvas.drawPath(
         valuePath, CommonPaintUtils.getStrokePaint(fillColor, 200, 1.5));
   }

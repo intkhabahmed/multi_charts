@@ -16,6 +16,7 @@ class RadarChartPainter extends CustomPainter {
   final List<String>? labels;
   final double maxValue;
   final Color fillColor;
+  final int fillAlpha;
   final Color strokeColor;
   final Color labelColor;
   final double textScaleFactor;
@@ -30,6 +31,7 @@ class RadarChartPainter extends CustomPainter {
       this.labels,
       this.maxValue,
       this.fillColor,
+      this.fillAlpha,
       this.strokeColor,
       this.labelColor,
       this.textScaleFactor,
@@ -62,7 +64,8 @@ class RadarChartPainter extends CustomPainter {
         values.length,
         outlineAnimationPercent,
         (min(center.dx, center.dy) * chartRadiusFactor));
-    RadarChartDrawUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
+    RadarChartDrawUtils.drawGraphData(
+        canvas, valuePoints, fillColor, fillAlpha, strokeColor);
     RadarChartDrawUtils.drawLabels(
         canvas,
         center,
