@@ -73,6 +73,11 @@ class RadarChart extends StatefulWidget {
   /// If not provided, it defaults to [Colors.black26].
   final Color fillColor;
 
+  /// Defines the alpha of background color of the plotted graph
+  ///
+  /// If not provided, it defaults to `50`.
+  final int fillAlpha;
+
   /// Defines the color of the chart outlines
   ///
   /// Defaults to [Colors.black87]
@@ -165,6 +170,7 @@ class RadarChart extends StatefulWidget {
       required this.maxValue,
       this.size = Size.infinite,
       this.fillColor = Colors.black26,
+      this.fillAlpha = 50,
       this.strokeColor = Colors.black87,
       this.labelColor = Colors.black,
       this.maxWidth = 200,
@@ -282,6 +288,7 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
               widget.labels,
               widget.maxValue,
               widget.fillColor,
+              widget.fillAlpha,
               widget.strokeColor,
               widget.labelColor,
               widget.textScaleFactor,

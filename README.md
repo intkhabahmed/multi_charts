@@ -23,6 +23,9 @@ It will support more types in the coming future.
  * **fillColor** - defines the background color of the plotted graph, if not provided, 
  defaults to **Colors.black26**.
 
+  * **fillAlpha** - defines the alpha of background color of the plotted graph, if not provided, 
+ defaults to **50** (Range: 0-255).
+
  * **strokeColor** - defines the color of the chart outlines, defaults to **Colors.black87**.
 
  * **labelColor** - defines the color of the chart labels, defaults to **Colors.black**.
