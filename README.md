@@ -3,7 +3,11 @@
 
 # multi_charts
 
-It is a library that provides different types of charts to plot data points. Currently it supports only Radar Chart, but will support more types in the coming future.
+It is a library that provides different types of charts to plot data points. Currently it supports:  
+* Radar Chart
+* Pie Chart
+
+It will support more types in the coming future.
 
 ## Radar Chart
 
@@ -54,7 +58,7 @@ It is a library that provides different types of charts to plot data points. Cur
 ## Pie Chart
 
 A chart type which plots the values in the form of a pie with different slices representing
-different values. It takes the @required **values** parameter which provides the data data to plot
+different values. It takes the @required **values** parameter which provides the data to plot
 the graph.
 
 The other parameters are optional which define different behaviors for the chart like:

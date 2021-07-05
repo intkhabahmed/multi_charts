@@ -1,4 +1,4 @@
-## [0.3.0] - 29 May 2020
+## [0.3.0] - 29 May 2021
 
 * Added support for null-safety
 ## [0.2.0] - 24 Dec 2019

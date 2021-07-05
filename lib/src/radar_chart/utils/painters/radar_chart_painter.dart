@@ -62,7 +62,8 @@ class RadarChartPainter extends CustomPainter {
         values.length,
         outlineAnimationPercent,
         (min(center.dx, center.dy) * chartRadiusFactor));
-    RadarChartDrawUtils.drawGraphData(canvas, valuePoints, fillColor, strokeColor);
+    RadarChartDrawUtils.drawGraphData(
+        canvas, valuePoints, fillColor, strokeColor);
     RadarChartDrawUtils.drawLabels(
         canvas,
         center,
