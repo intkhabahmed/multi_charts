@@ -103,10 +103,11 @@ class RadarChartDrawUtils {
       double maxValue,
       int noOfPoints,
       double animationPercent,
-      double chartRadius) {
+      double chartRadius,
+      int countStoke) {
     var boundaryPoints = <Offset>[];
     var outerPoints = <Offset>[];
-    for (var i = 0; i < maxValue; i += maxValue ~/ 5) {
+    for (var i = 0; i < maxValue; i += maxValue ~/ countStoke) {
       boundaryPoints.clear();
       for (var j = 0; j < noOfPoints; j++) {
         var x = animationPercent * chartRadius * cos(angle * j - pi / 2);

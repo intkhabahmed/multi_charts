@@ -134,6 +134,9 @@ class RadarChart extends StatefulWidget {
   /// to width or height (whatever is minimum). If not provided, defaults to `0.8 (80%)`.
   final double chartRadiusFactor;
 
+  /// The count of stokes. If not provided, defaults to `5`.
+  final int countStoke;
+
   /// Creates a chart which plots the values in the form of a spider web or radar.
   ///
   /// It takes the @required `values` parameter which provides the data points (`minimum 3 values` are required) and @required `maxValue`
@@ -175,7 +178,8 @@ class RadarChart extends StatefulWidget {
       this.animate = true,
       this.animationDuration = const Duration(milliseconds: 1500),
       this.curve = Curves.easeIn,
-      this.chartRadiusFactor = 0.8});
+      this.chartRadiusFactor = 0.8,
+      this.countStoke = 5});
 
   @override
   _RadarChartState createState() => _RadarChartState();
@@ -289,7 +293,8 @@ class _RadarChartState extends State<RadarChart> with TickerProviderStateMixin {
               widget.maxLinesForLabels,
               widget.animate ? dataAnimationPercent : 1.0,
               widget.animate ? outlineAnimationPercent : 1.0,
-              widget.chartRadiusFactor),
+              widget.chartRadiusFactor,
+              widget.countStoke),
           size: widget.size,
         ),
       ),
