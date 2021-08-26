@@ -25,6 +25,7 @@ class RadarChartPainter extends CustomPainter {
   final double outlineAnimationPercent;
   final double chartRadiusFactor;
   final int countStoke;
+  final String? fontFamily;
 
   RadarChartPainter(
       this.values,
@@ -39,7 +40,8 @@ class RadarChartPainter extends CustomPainter {
       this.dataAnimationPercent,
       this.outlineAnimationPercent,
       this.chartRadiusFactor,
-      this.countStoke);
+      this.countStoke,
+      this.fontFamily);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -76,7 +78,8 @@ class RadarChartPainter extends CustomPainter {
         labelWidth ??
             CommonPaintUtils.getDefaultLabelWidth(size, center, angle),
         maxLinesForLabels ?? CommonPaintUtils.getDefaultMaxLinesForLabels(size),
-        labelColor);
+        labelColor,
+        fontFamily);
   }
 
   @override
